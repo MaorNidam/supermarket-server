@@ -1,5 +1,5 @@
-const vacationsDal = require('../dal/vacations-dal');
-const pushLogic = require('../logic/push-logic')
+const vacationsDal = require('../dal/products-dal');
+const pushLogic = require('./push-logic')
 
 async function getAllVacations() {
     let vacations = await vacationsDal.getAllVacations();

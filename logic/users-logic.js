@@ -1,5 +1,5 @@
 const usersDal = require("../dal/users-dal");
-const likesDal = require("../dal/likes-dal")
+const likesDal = require("../dal/categories-dal")
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
@@ -7,14 +7,13 @@ const isEmailValid = require("is-valid-email");
 
 async function addUser(user) {
     validateUserData(user);
-    if (await usersDal.isUserEmailExist(user.email)) {
+    if (await usersDal.isUserEmailExist(user.id)) {
         // throw new ServerError(ErrorType.USER_NAME_ALREADY_EXIST);
-        throw new Error("Invalid e-mail or password.");
+        throw new Error("Id already exist.");
     }
     user.password = hashPassword(user.password);
-    user.typeOfUser = "user";
-    let newUserId = await usersDal.addUser(user);
-    return newUserId;
+    user.isAdmin = false;
+    await usersDal.addUser(user);
 }
 
 async function loginUser(userLogin) {
@@ -24,15 +23,17 @@ async function loginUser(userLogin) {
         throw new Error("Invalid e-mail or password.");
     }
 
-    let userLikes = await likesDal.getUserLikes(userDetails.id);
-    let likesArray = [];
-    for (let like of userLikes) {
-        likesArray.push(like.vacation_id);
-    }
+    //TODO: getUserCart
+    // let userLikes = await likesDal.getUserLikes(userDetails.id);
+    // let likesArray = [];
+    // for (let like of userLikes) {
+    //     likesArray.push(like.vacation_id);
+    // }
 
     let tokenInfo = { userId: userDetails.id, typeOfUser: userDetails.typeOfUser }
     const token = jwt.sign(tokenInfo, config.secret);
-    let loginResponse = { token: token, firstName: userDetails.firstName, lastName: userDetails.lastName, likesArray: likesArray };
+    let loginResponse = { token: token, firstName: userDetails.firstName, lastName: userDetails.lastName,
+                          email: userDetails.email, city: userDetails.city, street: userDetails.street };
 
     return loginResponse;
 }

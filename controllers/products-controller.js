@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-const vacationsLogic = require('../logic/vacations-logic');
-const likesLogic = require('../logic/likes-logic');
+const vacationsLogic = require('../logic/products-logic');
+const likesLogic = require('../logic/carts-logic');
 
 // Method: GET
 // url: /vacations/

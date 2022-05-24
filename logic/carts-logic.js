@@ -1,4 +1,4 @@
-const likesDal = require('../dal/likes-dal');
+const likesDal = require('../dal/categories-dal');
 
 async function deleteVacationLikes(vacationId) {
     await likesDal.deleteVacationLikes(vacationId);

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const tokenDecoder = require("../utils/token-decoder");
 
-const likesLogic = require('../logic/likes-logic');
+const likesLogic = require('../logic/carts-logic');
 
 // ADD LIKE
 // POST http://localhost:3000/likes
