@@ -1,23 +1,23 @@
-const vacationsDal = require('../dal/products-dal');
+const productsDal = require('../dal/products-dal');
 const pushLogic = require('./push-logic')
 
-async function getAllVacations() {
-    let vacations = await vacationsDal.getAllVacations();
-    return vacations;
+async function getAllProducts() {
+    let products = await productsDal.getAllProducts();
+    return products;
 }
 
-async function addVacation(vacation) {
-    validateVacation(vacation);
-    let newVacationId = await vacationsDal.addVacation(vacation);
-    vacation.id = newVacationId;
-    let vacationJson = JSON.stringify(vacation);
+async function addProduct(product) {
+    validateProduct(product);
+    let newProductId = await productsDal.addProduct(product);
+    product.id = newProductId;
+    let vacationJson = JSON.stringify(product);
     pushLogic.broadcast("add-or-edit-vacation",vacationJson);
-    return newVacationId;
+    return newProductId;
   }
   
   async function editVacation(vacation) {
-    validateVacation(vacation);
-    let newVacationId = await vacationsDal.editVacation(vacation);
+    validateProduct(vacation);
+    let newVacationId = await productsDal.editVacation(vacation);
     // vacation.id = newVacationId;
     let vacationJson = JSON.stringify(vacation);
     pushLogic.broadcast("add-or-edit-vacation",vacationJson);
@@ -25,11 +25,11 @@ async function addVacation(vacation) {
 }
 
 async function deleteVacation(id) {
-    await vacationsDal.deleteVacation(id);
+    await productsDal.deleteVacation(id);
     pushLogic.broadcast("delete-vacation",id);
 }
 
-const validateVacation = (vacation) => {
+const validateProduct = (vacation) => {
     if (vacation.name == "") {
       throw new Error("Name cannot be empty.");
     }
@@ -77,8 +77,8 @@ const validateVacation = (vacation) => {
   }
 
 module.exports = {
-    getAllVacations,
-    addVacation,
+    getAllVacations: getAllProducts,
+    addVacation: addProduct,
     editVacation,
     deleteVacation
 }

@@ -4,7 +4,6 @@ const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
 const isEmailValid = require("is-valid-email");
-const isIsraeliIdValid = require('israeli-id-validator');
 
 async function addUser(user) {
     validateUserData(user);
@@ -34,7 +33,7 @@ async function loginUser(userLogin) {
     let tokenInfo = { userId: userDetails.id, isAdmin: userDetails.isAdmin }
     const token = jwt.sign(tokenInfo, config.secret);
     let loginResponse = { token: token, firstName: userDetails.firstName, lastName: userDetails.lastName,
-                          email: userDetails.email, city: userDetails.city, street: userDetails.street };
+                          city: userDetails.city, street: userDetails.street };
 
     return loginResponse;
 }
@@ -70,7 +69,8 @@ function validateUserData(user) {
         throw new Error("Password needs to be between 6 to 12 charecters.");
     }
 
-    if (!isIsraeliIdValid(user.id)) {
+    let idFormat = /[^0-9]/g;
+    if (user.id.length != 9 || idFormat.test(user.id) ) {
         throw new Error("Invalid Id.");
     }
 

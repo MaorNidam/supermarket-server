@@ -1,17 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-const vacationsLogic = require('../logic/products-logic');
-const likesLogic = require('../logic/carts-logic');
+const productsLogic = require('../logic/products-logic');
 
 // Method: GET
-// url: /vacations/
-//getAllVacations()
+// url: /products/
+//getAllProducts()
 router.get("/", async (request, response) => {
     try {
-        let vacations = await vacationsLogic.getAllVacations();
+        let products = await productsLogic.getAllProducts();
 
-        response.json(vacations);
+        response.json(products);
     }
     catch (e) {
         console.error(e);
@@ -19,13 +18,27 @@ router.get("/", async (request, response) => {
     }
 });
 
-// ADD Vacation
-// POST http://localhost:3000/vacations
-// router.post("/vacations", async (request, response, next) => {
+// Method: GET
+// url: /products/:category
+//getAllProductsFromCategory()
+router.get("/:categoryId", async (request, response) => {
+    try {
+        let products = await productsLogic.getAllProductsFromCategory(request.params.categoryId);
+
+        response.json(products);
+    }
+    catch (e) {
+        console.error(e);
+        response.status(600).send(e.message);
+    }
+});
+
+// ADD product
+// POST http://localhost:3000/product
 router.post("/", async (request, response) => {
     try {
-        let vacation = request.body;
-        let id = await vacationsLogic.addVacation(vacation);
+        let product = request.body;
+        let id = await productsLogic.addProduct(product);
 
         response.json(id);
     }
@@ -35,13 +48,12 @@ router.post("/", async (request, response) => {
     }
 });
 
-// EDIT Vacation
-// PUT http://localhost:3000/vacations
-// router.post("/vacations", async (request, response, next) => {
+// EDIT product
+// PUT http://localhost:3000/products
 router.put("/", async (request, response) => {
     try {
-        let vacation = request.body;
-        let id = await vacationsLogic.editVacation(vacation);
+        let product = request.body;
+        let id = await productsLogic.editProduct(product);
 
         response.json(id);
     }
@@ -51,21 +63,5 @@ router.put("/", async (request, response) => {
     }
 });
 
-// DELETE Vacation
-// PUT http://localhost:3000/vacations
-// router.delete("/vacations", async (request, response, next) => {
-router.delete("/:id", async (request, response) => {
-    try {
-        let vacationId = request.params.id;
-        await likesLogic.deleteVacationLikes(vacationId);
-        await vacationsLogic.deleteVacation(vacationId);
-
-        response.json(vacationId);
-    }
-    catch (e) {
-        console.error(e);
-        response.status(600).send(e.message);
-    }
-});
 
 module.exports = router;
