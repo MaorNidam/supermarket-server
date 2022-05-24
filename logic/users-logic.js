@@ -4,12 +4,13 @@ const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
 const isEmailValid = require("is-valid-email");
+const isIsraeliIdValid = require('israeli-id-validator');
 
 async function addUser(user) {
     validateUserData(user);
-    if (await usersDal.isUserEmailExist(user.id)) {
+    if (await usersDal.isUserExist(user.id, user.email)) {
         // throw new ServerError(ErrorType.USER_NAME_ALREADY_EXIST);
-        throw new Error("Id already exist.");
+        throw new Error("Id or E-mail already exist.");
     }
     user.password = hashPassword(user.password);
     user.isAdmin = false;
@@ -30,7 +31,7 @@ async function loginUser(userLogin) {
     //     likesArray.push(like.vacation_id);
     // }
 
-    let tokenInfo = { userId: userDetails.id, typeOfUser: userDetails.typeOfUser }
+    let tokenInfo = { userId: userDetails.id, isAdmin: userDetails.isAdmin }
     const token = jwt.sign(tokenInfo, config.secret);
     let loginResponse = { token: token, firstName: userDetails.firstName, lastName: userDetails.lastName,
                           email: userDetails.email, city: userDetails.city, street: userDetails.street };
@@ -69,9 +70,9 @@ function validateUserData(user) {
         throw new Error("Password needs to be between 6 to 12 charecters.");
     }
 
-    if (user.password !== user.verifyPassword) {
-        throw new Error("Password doesn't match.");
-      }
+    if (!isIsraeliIdValid(user.id)) {
+        throw new Error("Invalid Id.");
+    }
 
 }
 

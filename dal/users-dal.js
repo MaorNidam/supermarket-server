@@ -7,15 +7,15 @@ async function addUser(user) {
 }
 
 async function loginUser(user) {
-    let sql = "select email, first_name as firstName, last_name as lastName, is_admin as isAdmin, city, street from users where id = ? and password=?";
-    let parameters = [user.id, user.password];
+    let sql = "select id, first_name as firstName, last_name as lastName, is_admin as isAdmin, city, street from users where email = ? and password=?";
+    let parameters = [user.email, user.password];
     let response = await connection.executeWithParameters(sql, parameters);
     return response[0];
 }
 
-async function isUserIdExist(userId) {
-    let sql = "select id from users where id = ?";
-    let parameters = [userId];
+async function isUserExist(userId, userEmail) {
+    let sql = "select id from users where (id = ? or email = ?) ";
+    let parameters = [userId, userEmail];
     let response = await connection.executeWithParameters(sql, parameters);
     return (response.length > 0);
 }
@@ -23,5 +23,5 @@ async function isUserIdExist(userId) {
 module.exports = {
     addUser,
     loginUser,
-    isUserIdExist
+    isUserExist
 }

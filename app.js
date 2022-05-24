@@ -12,7 +12,6 @@ const cartItemsController = require('./controllers/cart-items-controller');
 const loginFilter = require('./middleware/login-filter');
 // The following line register middleware functions (server.use())
 
-// Enables call from localhost:3000, fixes the CORS issue.
 server.use(cors({ origin: ["http://localhost:4200" ]}));
 server.use(loginFilter());
 
@@ -23,8 +22,8 @@ server.use("/products", productsController);
 server.use("/users", usersController);
 server.use("/categories", categoriesController);
 server.use("/orders", ordersController);
-server.use("/carts", cartsController);
-server.use("/cartItems", cartItemsController);
+// server.use("/carts", cartsController);
+// server.use("/cartItems", cartItemsController);
 
 // The following line launches the node server, on port 3001.
 server.listen(3001, () => console.log("Listening on http://localhost:3001"));
