@@ -22,7 +22,7 @@ server.use("/products", productsController);
 server.use("/users", usersController);
 server.use("/categories", categoriesController);
 server.use("/orders", ordersController);
-// server.use("/carts", cartsController);
+server.use("/carts", cartsController);
 // server.use("/cartItems", cartItemsController);
 
 // The following line launches the node server, on port 3001.

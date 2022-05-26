@@ -30,7 +30,7 @@ async function loginUser(userLogin) {
     //     likesArray.push(like.vacation_id);
     // }
 
-    let tokenInfo = { userId: userDetails.id, isAdmin: userDetails.isAdmin }
+    let tokenInfo = { userId: userDetails.id, role: userDetails.role }
     const token = jwt.sign(tokenInfo, config.secret);
     let loginResponse = { token: token, firstName: userDetails.firstName, lastName: userDetails.lastName,
                           city: userDetails.city, street: userDetails.street };

@@ -75,9 +75,9 @@ router.get("/days/", async (request, response) => {
 });
 
 // Method: GET
-// url: /orders/re
-//getBusyDays()
-router.get("/days/", async (request, response) => {
+// url: /orders/:cartId
+//getRecipt()
+router.get("/:cartId", async (request, response) => {
     try {
         let busyDays = await ordersLogic.getBusyDays();
         
