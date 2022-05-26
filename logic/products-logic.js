@@ -6,79 +6,70 @@ async function getAllProducts() {
     return products;
 }
 
+async function getAllProductsFromCategory(categoryId) {
+    let products = await productsDal.getAllProductsFromCategory(categoryId);
+    return products;
+}
+
+async function searchProduct(searchString) {
+    let products = await productsDal.searchProduct(searchString);
+    return products;
+}
+
 async function addProduct(product) {
     validateProduct(product);
     let newProductId = await productsDal.addProduct(product);
     product.id = newProductId;
-    let vacationJson = JSON.stringify(product);
-    pushLogic.broadcast("add-or-edit-vacation",vacationJson);
+    // let productJson = JSON.stringify(product);
+    // pushLogic.broadcast("add-or-edit-vacation",productJson);
     return newProductId;
   }
   
-  async function editVacation(vacation) {
-    validateProduct(vacation);
-    let newVacationId = await productsDal.editVacation(vacation);
+  async function editProduct(product) {
+    validateProduct(product);
+    await productsDal.editProduct(product);
     // vacation.id = newVacationId;
-    let vacationJson = JSON.stringify(vacation);
-    pushLogic.broadcast("add-or-edit-vacation",vacationJson);
-    return newVacationId;
+    // let vacationJson = JSON.stringify(product);
+    // pushLogic.broadcast("add-or-edit-vacation",vacationJson);
+    // return newVacationId;
 }
 
-async function deleteVacation(id) {
-    await productsDal.deleteVacation(id);
-    pushLogic.broadcast("delete-vacation",id);
+async function deleteProduct(id) {
+    await productsDal.deleteProduct(id);
+    // pushLogic.broadcast("delete-vacation",id);
 }
 
-const validateProduct = (vacation) => {
-    if (vacation.name == "") {
-      throw new Error("Name cannot be empty.");
+const validateProduct = (product) => {
+    if (product.name == "") {
+      throw new Error("Name can not be empty.");
     }
 
-    if (vacation.name.length > 20) {
+    if (product.categoryId == "") {
+      throw new Error("Select a category.");
+    }
+
+    if (product.name.length > 20) {
       throw new Error("Name is limited to 20 charecters.");
     }
     
-    if (vacation.description == "") {
-      throw new Error("Please describe the vacation.");
-    }
-
-    if (vacation.description.length > 1500) {
-      throw new Error("Description is limited to 1500 charecters.");
+    if (product.price <= 0) {
+        throw new Error("Invalid price.");
     }
     
-    if (vacation.price == 0) {
-        throw new Error("Please enter a price.");
-    }
-    
-    let format = /[^0-9]/g;
-    if (format.test(vacation.price)) {
-        throw new Error("Invalid price");
-    }
-
-    if (vacation.imgURL == "") {
+    if (product.imgUrl == "") {
       throw new Error("Please enter image URL.");
     }
 
-    if (vacation.imgURL.length > 350) {
+    if (product.imgUrl.length > 350) {
       throw new Error("Image URL is limited to 350 charecters.");
-    }
-
-    if (vacation.startDate == "") {
-      throw new Error("Please enter a start date.");
-    }
-    
-    if (vacation.endDate == "") {
-      throw new Error("Invalid end date.");
-    }
-    
-    if (vacation.startDate > vacation.endDate) {
-      throw new Error("End value must be later the start date."); 
     }
   }
 
 module.exports = {
-    getAllVacations: getAllProducts,
-    addVacation: addProduct,
-    editVacation,
-    deleteVacation
+    getAllProducts,
+    getAllProductsFromCategory,
+    searchProduct,
+    addProduct,
+    editProduct,
+    deleteProduct
 }

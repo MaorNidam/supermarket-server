@@ -9,7 +9,20 @@ const productsLogic = require('../logic/products-logic');
 router.get("/", async (request, response) => {
     try {
         let products = await productsLogic.getAllProducts();
+        response.json(products);
+    }
+    catch (e) {
+        console.error(e);
+        response.status(600).send(e.message);
+    }
+});
 
+// Method: GET
+// url: /products/search/:searchString
+//getAllProducts()
+router.get("/search/:searchString", async (request, response) => {
+    try {
+        let products = await productsLogic.searchProduct(request.params.searchString);
         response.json(products);
     }
     catch (e) {
@@ -38,9 +51,9 @@ router.get("/:categoryId", async (request, response) => {
 router.post("/", async (request, response) => {
     try {
         let product = request.body;
-        let id = await productsLogic.addProduct(product);
+        let productId = await productsLogic.addProduct(product);
 
-        response.json(id);
+        response.json(productId);
     }
     catch (e) {
         console.error(e);

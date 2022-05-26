@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const tokenDecoder = require("../utils/token-decoder");
+// const tokenDecoder = require("../utils/token-decoder");
 
-const likesLogic = require('../logic/carts-logic');
+const ordersLogic = require('../logic/orders-logic');
 
 // ADD LIKE
 // POST http://localhost:3000/likes
@@ -14,7 +14,7 @@ router.post("/", async (request, response) => {
         let tokenInfo = tokenDecoder.decodeTokenFromRequest(request);
         
         let likeRequest = {tokenInfo , vacationId};
-        await likesLogic.addLike(likeRequest);
+        await ordersLogic.addLike(likeRequest);
 
         response.json();
     }
@@ -34,7 +34,7 @@ router.delete("/:id", async (request, response) => {
         let tokenInfo = tokenDecoder.decodeTokenFromRequest(request);
         
         let likeRequest = {tokenInfo , vacationId};
-        await likesLogic.deleteLike(likeRequest);
+        await ordersLogic.deleteLike(likeRequest);
 
         response.json();
     }
@@ -45,14 +45,43 @@ router.delete("/:id", async (request, response) => {
 });
 
 // Method: GET
-// url: /likes/
-//getUserLikes()
-router.get("/", async (request, response) => {
+// url: /orders/amount
+//getOrdersAmount()
+router.get("/amount/", async (request, response) => {
     try {
-        let tokenInfo = tokenDecoder.decodeTokenFromRequest(request);
-        let userLikes = await likesLogic.getUserLikes(tokenInfo.userId);
+        let amountOfOrders = await ordersLogic.getOrdersAmount();
         
-        response.json(userLikes);
+        response.json(amountOfOrders);
+    }
+    catch (e) {
+        console.error(e);
+        response.status(600).send(e.message);
+    }
+});
+
+// Method: GET
+// url: /orders/days
+//getBusyDays()
+router.get("/days/", async (request, response) => {
+    try {
+        let busyDays = await ordersLogic.getBusyDays();
+        
+        response.json(busyDays);
+    }
+    catch (e) {
+        console.error(e);
+        response.status(600).send(e.message);
+    }
+});
+
+// Method: GET
+// url: /orders/re
+//getBusyDays()
+router.get("/days/", async (request, response) => {
+    try {
+        let busyDays = await ordersLogic.getBusyDays();
+        
+        response.json(busyDays);
     }
     catch (e) {
         console.error(e);
