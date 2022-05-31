@@ -17,10 +17,10 @@ async function openCart(newCart) {
 }
 
 async function validateCartForUser(cartId, userId) {
-    let sql = "select id from carts where cartId = ? and userId = ?";
+    let sql = "select id from carts where id = ? and user_id = ?";
     let parameters = [cartId, userId];
     let response = await connection.executeWithParameters(sql, parameters);
-    return response.insertId;
+    return response.length > 0;
 }
 
 

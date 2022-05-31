@@ -1,22 +1,18 @@
 const express = require("express");
 const router = express.Router();
-// const tokenDecoder = require("../utils/token-decoder");
+const tokenDecoder = require("../utils/token-decoder");
 
 const ordersLogic = require('../logic/orders-logic');
 
-// ADD LIKE
-// POST http://localhost:3000/likes
-// router.post("/", async (request, response, next) => {
-router.post("/", async (request, response) => {
+// Method: GET
+// url: /orders/
+//getLastOrderDate()
+router.get("/", async (request, response) => {
     try {
-        let vacationId = request.body.vacationId;
+        let userInfo = tokenDecoder.decodeTokenFromRequest(request)
+        let lastOrderDate = await ordersLogic.getLastOrderDate(userInfo.userId);
 
-        let tokenInfo = tokenDecoder.decodeTokenFromRequest(request);
-        
-        let likeRequest = {tokenInfo , vacationId};
-        await ordersLogic.addLike(likeRequest);
-
-        response.json();
+        response.json(lastOrderDate);
     }
     catch (e) {
         console.error(e);
@@ -24,25 +20,6 @@ router.post("/", async (request, response) => {
     }
 });
 
-// DELETE LIKE
-// DELETE http://localhost:3000/likes
-// router.post("/", async (request, response, next) => {
-router.delete("/:id", async (request, response) => {
-    try {
-        let vacationId = request.params.id;
-
-        let tokenInfo = tokenDecoder.decodeTokenFromRequest(request);
-        
-        let likeRequest = {tokenInfo , vacationId};
-        await ordersLogic.deleteLike(likeRequest);
-
-        response.json();
-    }
-    catch (e) {
-        console.error(e);
-        response.status(600).send(e.message);
-    }
-});
 
 // Method: GET
 // url: /orders/amount
@@ -62,7 +39,7 @@ router.get("/amount/", async (request, response) => {
 // Method: GET
 // url: /orders/days
 //getBusyDays()
-router.get("/days/", async (request, response) => {
+router.get("/days", async (request, response) => {
     try {
         let busyDays = await ordersLogic.getBusyDays();
         
@@ -76,12 +53,43 @@ router.get("/days/", async (request, response) => {
 
 // Method: GET
 // url: /orders/:cartId
-//getRecipt()
+//getReceipt()
 router.get("/:cartId", async (request, response) => {
     try {
-        let busyDays = await ordersLogic.getBusyDays();
-        
-        response.json(busyDays);
+        let cartId = request.params.cartId;
+        let userId = tokenDecoder.decodeTokenFromRequest(request).userId;
+        let receipt = await ordersLogic.getReceipt(cartId, userId);
+
+        response.json(receipt);
+    }
+    catch (e) {
+        console.error(e);
+        response.status(600).send(e.message);
+    }
+});
+
+// ADD ORDER
+// POST http://localhost:3000/orders
+// router.post("/", async (request, response, next) => {
+    router.post("/", async (request, response) => {
+        try {
+            let orderInfo = request.body;
+            
+            let userInfo = tokenDecoder.decodeTokenFromRequest(request);
+            
+        let orderRequest = {
+            userId: userInfo.userId,
+            cartId: orderInfo.cartId,
+            finalPrice: orderInfo.finalPrice,
+            shippingCity: orderInfo.shippingCity,
+            shippingStreet: orderInfo.shippingStreet,
+            shippingDate: new Date(orderInfo.shippingDate),
+            paymentLastDigits: orderInfo.paymentLastDigits,
+            orderDate: new Date()
+        };
+        await ordersLogic.addOrder(orderRequest);
+
+        response.json();
     }
     catch (e) {
         console.error(e);

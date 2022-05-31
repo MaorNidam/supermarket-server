@@ -7,20 +7,32 @@ async function getCartItems(cartId) {
 }
 
 async function addCartItem(cartItem, userInfo) {
-    cartLogic.validateCartForUser(cartItem.cartId, userInfo);
-    //validateCartItem(cartItem);
-    let cartItemId = await cartItemsDal.addCartItem(cartItem);
-    return cartItemId;
+    let userId = userInfo.userId;
+    let isCartVerified = await cartLogic.validateCartForUser(cartItem.cartId, userId);
+    if (isCartVerified) {
+        let cartItemId = await cartItemsDal.addCartItem(cartItem);
+        return cartItemId;
+    }
+    else {
+        throw new Error("The server is a teapot.")
+    }
 }
+
 async function updateCartItem(cartItem, userInfo) {
-    //TODO: 
-    cartLogic.validateCartForUser(userInfo);
-    //validateCartItem(cartItem);
-    await cartItemsDal.updateCartItem(cartItem);
+    let userId = userInfo.userId;
+    let isCartVerified = await cartLogic.validateCartForUser(cartItem.cartId, userId);
+    if (isCartVerified) {
+        await cartItemsDal.updateCartItem(cartItem);
+    }
+    else {
+        throw new Error("The server is a teapot.")
+    }
 }
+
 async function deleteCartItem(cartItemId) {
     await cartItemsDal.deleteCartItem(cartItemId);
 }
+
 async function deleteAllItemsFromCart(cartId) {
     await cartItemsDal.deleteAllItemsFromCart(cartId);
 }

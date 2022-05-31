@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const cartItemsLogic = require('../logic/cart-items-logic')
+const cartItemsLogic = require('../logic/cart-items-logic');
+const tokenDecoder = require("../utils/token-decoder");
 
 // Method: GET
 // url: /cart-item/:cartId

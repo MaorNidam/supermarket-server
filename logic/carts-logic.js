@@ -22,8 +22,7 @@ async function openCart(userInfo) {
     return cartId;
 }
 
-async function validateCartForUser(cartId, userInfo) {
-    let userId = userInfo.userId;
+async function validateCartForUser(cartId, userId) {
     let isCartBelongToUser = await cartsDal.validateCartForUser(cartId, userId);
     return isCartBelongToUser;
 }

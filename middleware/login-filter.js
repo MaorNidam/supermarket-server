@@ -18,7 +18,11 @@ function authenticateJwtRequestToken() {
             return true;
         }
         
-        if (request.method == 'GET' && request.url.endsWith('/vacations')) {
+        if (request.method == 'GET' && request.url.endsWith('/orders/amount')) {
+            return true;
+        }
+
+        if (request.method == 'GET' && request.url.endsWith('/products')) {
             return true;
         }
 
