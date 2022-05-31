@@ -12,7 +12,7 @@ async function addUser(user) {
         throw new Error("Id or E-mail already exist.");
     }
     user.password = hashPassword(user.password);
-    user.isAdmin = false;
+    user.role = "user";
     await usersDal.addUser(user);
 }
 
