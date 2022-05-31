@@ -22,7 +22,14 @@ async function openCart(userInfo) {
     return cartId;
 }
 
+async function validateCartForUser(cartId, userInfo) {
+    let userId = userInfo.userId;
+    let isCartBelongToUser = await cartsDal.validateCartForUser(cartId, userId);
+    return isCartBelongToUser;
+}
+
 module.exports = {
     getLastCart,
-    openCart
+    openCart,
+    validateCartForUser
 }

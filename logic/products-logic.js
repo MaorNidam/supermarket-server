@@ -40,16 +40,16 @@ async function deleteProduct(id) {
 }
 
 const validateProduct = (product) => {
-    if (product.name == "") {
+    if (!product.name && product.name.trim() == "") {
       throw new Error("Name can not be empty.");
     }
 
-    if (product.categoryId == "") {
+    if (!product.categoryId || product.categoryId == "") {
       throw new Error("Select a category.");
     }
 
     if (product.name.length > 20) {
-      throw new Error("Name is limited to 20 charecters.");
+      throw new Error("Name is limited to 20 characters.");
     }
     
     if (product.price <= 0) {
@@ -61,7 +61,7 @@ const validateProduct = (product) => {
     }
 
     if (product.imgUrl.length > 350) {
-      throw new Error("Image URL is limited to 350 charecters.");
+      throw new Error("Image URL is limited to 350 characters.");
     }
   }
 

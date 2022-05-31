@@ -1,7 +1,7 @@
 const connection = require("./connection-wrapper");
 
 async function getLastCart(userId) {
-    let sql = `SELECT id,user_id as userId, creation_date as creationDate, is_open as isOpen
+    let sql = `SELECT id,user_id as userId, creation_date as creationDate, IF(is_open, "true", "false") isOpen
     FROM supermarket.carts
     where user_id = ? and creation_date in (select max(creation_date) from carts)`;
     let parameters = [userId]
@@ -12,12 +12,21 @@ async function getLastCart(userId) {
 async function openCart(newCart) {
     let sql = "insert into carts (user_id, is_open, creation_date) value(?, ?, ?)";
     let parameters = [newCart.userId, newCart.isOpen, newCart.creationDate];
-    console.log(newCart);
     let response = await connection.executeWithParameters(sql, parameters);
     return response.insertId;
 }
 
+async function validateCartForUser(cartId, userId) {
+    let sql = "select id from carts where cartId = ? and userId = ?";
+    let parameters = [cartId, userId];
+    let response = await connection.executeWithParameters(sql, parameters);
+    return response.insertId;
+}
+
+
+
 module.exports = {
     getLastCart,
-    openCart
+    openCart,
+    validateCartForUser
 }
