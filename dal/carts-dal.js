@@ -1,11 +1,11 @@
 const connection = require("./connection-wrapper");
 
 async function getLastCart(userId) {
-    let sql = `SELECT id,user_id as userId, creation_date as creationDate, IF(is_open, "true", "false") isOpen
+    let sql = `SELECT id, creation_date as creationDate, is_open as isOpen
     FROM supermarket.carts
     where user_id = ? and creation_date in (select max(creation_date) from carts)`;
     let parameters = [userId]
-    let cart = await connection.executeWithParameters(sql, parameters);
+    let [cart] = await connection.executeWithParameters(sql, parameters);
     return cart;
 }
 

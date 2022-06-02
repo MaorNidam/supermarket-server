@@ -43,7 +43,8 @@ router.post("/", async (request, response) => {
 router.put("/", async (request, response) => {
     try {
         let cartItem = request.body;
-        await cartItemsLogic.updateCartItem(cartItem);
+        let userInfo = tokenDecoder.decodeTokenFromRequest(request);
+        await cartItemsLogic.updateCartItem(cartItem, userInfo);
         
         response.json();
     }
@@ -59,7 +60,8 @@ router.put("/", async (request, response) => {
 router.delete("/:cartItemId", async (request, response) => {
     try {
         let cartItemId = request.params.cartItemId;
-        await cartItemsLogic.deleteCartItem(cartItemId);
+        let userInfo = tokenDecoder.decodeTokenFromRequest(request);
+        await cartItemsLogic.deleteCartItem(cartItemId, userInfo);
         
         response.json();
     }
@@ -75,7 +77,8 @@ router.delete("/:cartItemId", async (request, response) => {
 router.delete("/by-cart/:cartId", async (request, response) => {
     try {
         let cartId = request.params.cartId;
-        await cartItemsLogic.deleteAllItemsFromCart(cartId);
+        let userInfo = tokenDecoder.decodeTokenFromRequest(request);
+        await cartItemsLogic.deleteAllItemsFromCart(cartId, userInfo);
         
         response.json();
     }

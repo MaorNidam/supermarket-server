@@ -10,7 +10,7 @@ const tokenDecoder = require("../utils/token-decoder");
 router.get("/", async (request, response) => {
     try {
         let userInfo = tokenDecoder.decodeTokenFromRequest(request);
-        let cart = await cartLogic.getLastCart(userInfo);
+        let cart = await cartLogic.getLastCart(userInfo.userId);
         
         response.json(cart);
     }

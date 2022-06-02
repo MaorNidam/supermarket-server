@@ -39,7 +39,7 @@ async function addOrder(orderRequest) {
 async function validateOrderRequest(orderRequest) {
     let isCartBelongToUser = await cartsLogic.validateCartForUser(orderRequest.cartId, orderRequest.userId);
     if (!isCartBelongToUser) {
-        throw new Error("The server is a teapot.");
+        throw new Error("Invalid order request.");
     }
 
     if (orderRequest.finalPrice <= 0) {
@@ -62,7 +62,7 @@ async function validateOrderRequest(orderRequest) {
         throw new Error("Invalid final price.");
     }
 
-    if (orderRequest.paymentLastDigits < 1000 || orderRequest.paymentLastDigits > 9999) {
+    if (orderRequest.paymentLastDigits.length != 4) {
         throw new Error("Invalid last payment digits.");
     }
 }

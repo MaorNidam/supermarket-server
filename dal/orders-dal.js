@@ -5,8 +5,8 @@ async function getLastOrderDate(userId) {
     FROM supermarket.orders
     where user_id = ? `;
     let parameters = [userId]
-    let cart = await connection.executeWithParameters(sql, parameters);
-    return cart;
+    let [serverResponse] = await connection.executeWithParameters(sql, parameters);
+    return serverResponse;
 }
 
 async function getReceipt(cartId, userId) {

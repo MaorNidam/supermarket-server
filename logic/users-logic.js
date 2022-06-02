@@ -1,5 +1,5 @@
 const usersDal = require("../dal/users-dal");
-const likesDal = require("../dal/categories-dal")
+const cartsLogic = require("../logic/carts-logic")
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 const config = require('../config/config.json');
@@ -22,18 +22,15 @@ async function loginUser(userLogin) {
     if (!userDetails) {
         throw new Error("Invalid e-mail or password.");
     }
+    
+    let userId = userDetails.id;
+    let userCart = await cartsLogic.getLastCart(userId)
 
-    //TODO: getUserCart
-    // let userLikes = await likesDal.getUserLikes(userDetails.id);
-    // let likesArray = [];
-    // for (let like of userLikes) {
-    //     likesArray.push(like.vacation_id);
-    // }
 
-    let tokenInfo = { userId: userDetails.id, role: userDetails.role }
+    let tokenInfo = { userId, role: userDetails.role }
     const token = jwt.sign(tokenInfo, config.secret);
     let loginResponse = { token: token, firstName: userDetails.firstName, lastName: userDetails.lastName,
-                          city: userDetails.city, street: userDetails.street };
+                          city: userDetails.city, street: userDetails.street , userCart };
 
     return loginResponse;
 }

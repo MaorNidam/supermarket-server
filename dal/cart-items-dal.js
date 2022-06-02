@@ -18,14 +18,14 @@ async function addCartItem(cartItem) {
 }
 
 async function updateCartItem(cartItem) {
-    let sql = `UPDATE cart_items SET product_id = ?, cart_id = ?, quantity = ? WHERE id = ?;`;
-    let parameters = [cartItem.productId, cartItem.cartId, cartItem.quantity, cartItem.id];
+    let sql = `UPDATE cart_items SET quantity = ? WHERE id = ?;`;
+    let parameters = [ cartItem.quantity, cartItem.id];
     await connection.executeWithParameters(sql, parameters);
 }
 
-async function deleteCartItem(cartItemId) {
+async function deleteCartItem(userId) {
     sql = `DELETE FROM cart_items WHERE id = ?;`;
-    parameters = [cartItemId];
+    parameters = [userId];
     await connection.executeWithParameters(sql, parameters);
 }
 
@@ -35,10 +35,21 @@ async function deleteAllItemsFromCart(cartId) {
     await connection.executeWithParameters(sql, parameters);
 }
 
+async function validateCartItemForUser(cartItemId, userId) {
+    let sql = `select ci.id 
+    from carts c join cart_items ci 
+    on c.id = ci.cart_id 
+    where ci.id = ? and c.user_id = ?;`;
+    let parameters = [cartItemId, userId];
+    let response = await connection.executeWithParameters(sql, parameters);
+    return response.length > 0;
+}
+
 module.exports = {
     getCartItems,
     addCartItem,
     updateCartItem,
     deleteCartItem,
-    deleteAllItemsFromCart
+    deleteAllItemsFromCart,
+    validateCartItemForUser
 }

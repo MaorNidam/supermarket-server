@@ -1,25 +1,30 @@
 const cartsDal = require('../dal/carts-dal');
-const cartItemsDal = require('../dal/cart-items-dal');
 
-async function getLastCart(userInfo) {
-    let userId = userInfo.userId;
+async function getLastCart(userId) {
     let lastCart = await cartsDal.getLastCart(userId);
+    if (lastCart){
+        lastCart.isOpen = !!lastCart.isOpen;
+    }
     return lastCart;
 }
 
 async function openCart(userInfo) {
     let role = userInfo.role;
-    console.log(userInfo)
     if (role != "user") {
         throw new Error("Invalid open cart request.");
     }
-    let newCart = {
+    let newCartRequest = {
         userId : userInfo.userId,
         isOpen: true,
         creationDate: new Date()
     }
-    let cartId = await cartsDal.openCart(newCart);
-    return cartId;
+    let cartId = await cartsDal.openCart(newCartRequest);
+    let openedCart = {
+        id : cartId,
+        isOpen: true,
+        creationDate: newCartRequest.creationDate
+    }
+    return openedCart;
 }
 
 async function validateCartForUser(cartId, userId) {
