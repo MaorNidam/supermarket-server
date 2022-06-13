@@ -35,6 +35,11 @@ async function loginUser(userLogin) {
     return loginResponse;
 }
 
+async function isUserExist(userId, email) {
+    let isUserExist = await usersDal.isUserExist(userId, email);
+    return isUserExist;
+}
+
 function hashPassword(password) {
     const saltRight = "sdkjfhdskajh";
     const saltLeft = "--mnlcfs;@!$ ";
@@ -76,4 +81,5 @@ function validateUserData(user) {
 module.exports = {
     addUser,
     loginUser,
+    isUserExist
 }

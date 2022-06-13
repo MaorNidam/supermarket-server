@@ -35,6 +35,23 @@ router.post("/login", async (request, response) => {
     }
 });
 
+// verify USER
+// POST http://localhost:3000/users/isExist
+// router.post("/users/login/", async (request, response, next) => {
+router.post("/isExist", async (request, response) => {
+    try {
+        let userId = request.body.userId;
+        let email = request.body.email;
+        let loginResponse = await usersLogic.isUserExist(userId, email);
+        
+        response.json(loginResponse);
+    }
+    catch(e) {
+        console.error(e);
+        response.status(600).send(e.message);
+    }
+});
+
 
 
 module.exports = router;
