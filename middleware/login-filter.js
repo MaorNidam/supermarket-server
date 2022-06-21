@@ -10,7 +10,11 @@ function authenticateJwtRequestToken() {
         console.log("Method = " + request.method);
         console.log("request.url = " + request.url);
 
-        if (request.method == 'POST' && request.url.endsWith('/users')) {
+        if (request.method == 'POST' && request.url.endsWith('/users/')) {
+            return true;
+        }
+
+        if (request.method == 'POST' && request.url.endsWith('/users/isExist')) {
             return true;
         }
 
@@ -18,11 +22,11 @@ function authenticateJwtRequestToken() {
             return true;
         }
         
-        if (request.method == 'GET' && request.url.endsWith('/orders/amount')) {
+        if (request.method == 'GET' && request.url.endsWith('/orders/amount/')) {
             return true;
         }
 
-        if (request.method == 'GET' && request.url.endsWith('/products')) {
+        if (request.method == 'GET' && request.url.endsWith('/products/')) {
             return true;
         }
 

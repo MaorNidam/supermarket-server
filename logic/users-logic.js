@@ -64,11 +64,20 @@ function validateUserData(user) {
     //allows only letters.
     let format = /[^a-zA-Z]/g;
     if (format.test(user.firstName)) {
-        throw new Error("Invalid first name");
+        throw new Error("Invalid first name.");
+    }
+
+    if (user.lastName === "") {
+        throw new Error("Please enter your last name.");
+    }
+
+    //allows only letters.
+    if (format.test(user.lastName)) {
+        throw new Error("Invalid last name.");
     }
 
     if (user.password.length < 6 || user.password.length > 12) {
-        throw new Error("Password needs to be between 6 to 12 charecters.");
+        throw new Error("Password needs to be between 6 to 12 characters.");
     }
 
     let idFormat = /[^0-9]/g;
