@@ -34,6 +34,7 @@ async function getBusyDays() {
 async function addOrder(orderRequest) {
     await validateOrderRequest(orderRequest);
     await ordersDal.addOrder(orderRequest);
+    await cartsLogic.closeCart(orderRequest.cartId);
 }
 
 async function validateOrderRequest(orderRequest) {

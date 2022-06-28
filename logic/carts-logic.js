@@ -27,6 +27,10 @@ async function openCart(userInfo) {
     return openedCart;
 }
 
+async function closeCart(cartId) {
+    await cartsDal.closeCart(cartId);
+}
+
 async function validateCartForUser(cartId, userId) {
     let isCartBelongToUser = await cartsDal.validateCartForUser(cartId, userId);
     return isCartBelongToUser;
@@ -35,5 +39,6 @@ async function validateCartForUser(cartId, userId) {
 module.exports = {
     getLastCart,
     openCart,
+    closeCart,
     validateCartForUser
 }
