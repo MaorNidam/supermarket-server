@@ -1,5 +1,7 @@
 const ordersDal = require('../dal/orders-dal');
 const cartsLogic = require('./carts-logic');
+const cartItemsLogic = require('./cart-items-logic');
+const fs = require('fs/promises');
 
 async function getLastOrderDate(userId) {
     let lastOrderDate = await ordersDal.getLastOrderDate(userId);
@@ -9,8 +11,8 @@ async function getLastOrderDate(userId) {
 async function getReceipt(cartId, userId) {
     let isCartBelongToUser = await cartsLogic.validateCartForUser(cartId, userId);
     if (isCartBelongToUser) {
-        let receipt = await ordersDal.getReceipt(cartId);
-        return receipt;
+        let receiptName = cartId + '.txt';
+        return receiptName;
     }
     else {
         throw new Error("Invalid receipt request.");
@@ -35,6 +37,24 @@ async function addOrder(orderRequest) {
     await validateOrderRequest(orderRequest);
     await ordersDal.addOrder(orderRequest);
     await cartsLogic.closeCart(orderRequest.cartId);
+    await createReceipt(orderRequest);
+}
+
+async function createReceipt(orderRequest) {
+    cartId = orderRequest.cartId;
+    let receipt = 'Receipt No. ' + cartId;
+    let cartItemsArray = await cartItemsLogic.getCartItems(orderRequest.cartId);
+    for (let cartItem of cartItemsArray) {
+        receipt += `
+    ${cartItem.productName} X ${cartItem.quantity}
+_______________________________________________`
+    }
+    receipt += `
+Total: ${orderRequest.finalPrice}
+Payment: ${orderRequest.paymentLastDigits}`
+
+    await fs.writeFile('./receipts/' + cartId + '.txt', receipt);
+
 }
 
 async function validateOrderRequest(orderRequest) {

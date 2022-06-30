@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const tokenDecoder = require("../utils/token-decoder");
+const path = require("path");
 
 const ordersLogic = require('../logic/orders-logic');
 
@@ -58,9 +59,9 @@ router.get("/:cartId", async (request, response) => {
     try {
         let cartId = request.params.cartId;
         let userId = tokenDecoder.decodeTokenFromRequest(request).userId;
-        let receipt = await ordersLogic.getReceipt(cartId, userId);
+        let receiptName = await ordersLogic.getReceipt(cartId, userId);
 
-        response.json(receipt);
+        response.sendFile(path.resolve(__dirname , '../receipts/' , receiptName));
     }
     catch (e) {
         console.error(e);
