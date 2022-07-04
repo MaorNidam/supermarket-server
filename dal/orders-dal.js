@@ -9,10 +9,6 @@ async function getLastOrderDate(userId) {
     return serverResponse;
 }
 
-async function getReceipt(cartId, userId) {
-    return ("FIX THIS!");
-}
-
 async function getOrdersAmount() {
     let sql = `SELECT count(id) as amountOfOrders 
     FROM supermarket.orders`;
@@ -45,7 +41,6 @@ async function addOrder(orderRequest) {
 
 module.exports = {
     getLastOrderDate,
-    getReceipt,
     getOrdersAmount,
     getBusyDays,
     addOrder

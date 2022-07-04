@@ -25,9 +25,6 @@ async function loginUser(userLogin) {
     
     let userId = userDetails.id;
     let userCart = await cartsLogic.getLastCart(userId);
-    console.log(userId);
-    console.log(userCart);
-
 
     let tokenInfo = { userId, role: userDetails.role }
     const token = jwt.sign(tokenInfo, config.secret);

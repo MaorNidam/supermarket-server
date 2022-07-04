@@ -30,6 +30,10 @@ function authenticateJwtRequestToken() {
             return true;
         }
 
+        if (request.method == 'GET' && request.url.endsWith('/categories')) {
+            return true;
+        }
+
         return false;
 
     });
