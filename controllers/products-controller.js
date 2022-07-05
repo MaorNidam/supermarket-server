@@ -5,6 +5,7 @@ const productsLogic = require('../logic/products-logic');
 
 // Method: GET
 // url: /products/
+
 //getAllProducts()
 router.get("/", async (request, response) => {
     try {

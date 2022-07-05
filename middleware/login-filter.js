@@ -34,6 +34,10 @@ function authenticateJwtRequestToken() {
             return true;
         }
 
+        if (request.method == 'GET' && request.url.endsWith('/api-docs/')) {
+            return true;
+        }
+
         return false;
 
     });
