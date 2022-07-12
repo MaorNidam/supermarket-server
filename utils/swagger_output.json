@@ -1,0 +1,529 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Online Shop API",
+    "description": "Description of the server API.",
+    "contact": {
+      "email": "nidamaor@gmail.com"
+    }
+  },
+  "host": "localhost:3001",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "users",
+      "description": "User operations, Login / Register"
+    },
+    {
+      "name": "carts",
+      "description": "Cart operations."
+    },
+    {
+      "name": "cart-items",
+      "description": "Cart-Items operations."
+    },
+    {
+      "name": "categories",
+      "description": "Categories operations."
+    },
+    {
+      "name": "products",
+      "description": "Products operations."
+    },
+    {
+      "name": "orders",
+      "description": "Orders operations."
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/cart-items/{cartId}": {
+      "get": {
+        "tags": [
+          "cart-items"
+        ],
+        "description": "Get all the items in the cart, by cart Id.",
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "600": {
+            "description": "Server error. (Validation)."
+          }
+        }
+      }
+    },
+    "/cart-items/": {
+      "post": {
+        "tags" :["cart-items"],
+        "description": "Add cart item. ",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "productId" : {
+                  "example" : 5
+                }, 
+                "cartId" : {
+                  "example" : 4
+                },
+                "quantity" : {
+                  "example" : 8
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Items added successfully."
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/cart-items/{cartItemId}": {
+      "delete": {
+        "tags": [
+          "cart-items"
+        ],
+        "description": "Delete the cart item.",
+        "parameters": [
+          {
+            "name": "cartItemId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item deleted."
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/cart-items/by-cart/{cartId}": {
+      "delete": {
+        "tags": [
+          "cart-items"
+        ],
+        "description": "Deletes all the items that are related to the current cart.",
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK, cart cleared."
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/orders/amount/": {
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "description": "Get the amount of orders that were already made.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "600": {
+            "description": "Server Error."
+          }
+        }
+      }
+    },
+    "/orders/days": {
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "description": "Get the dates of the busy days.\n A busy day means that there are 3 orders to ship on that day.\n Returns a Date array.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "600": {
+            "description": "Server Error."
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Get all products.",
+        "description": "Return an array with all the products from the data base.",
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/product"
+              }
+            }
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Update product.",
+        "description": "Update an existing product's properties.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "payload": {
+                  "$ref": "#/definitions/productUpdate"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product updated."
+          },
+          "401": {
+            "description": "Unauthorized, no valid admin token."
+          },
+          "600": {
+            "description": "Server error."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Add a new product.",
+        "description": "Add a new product to the data base.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "payload": {
+                  "$ref": "#/definitions/ProductAdd"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Added successfully."
+          },
+          "401": {
+            "description": "Unauthorized, no valid admin token."
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/products/{categoryId}": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Get products from category.",
+        "description": "Get products array from a specific category, by the category's id number.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/product"
+              }
+            }
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/products/search/{searchString}": {
+      "get": {
+        "tags": [
+          "products"
+        ],
+        "summary": "Search for products.",
+        "description": "Search for a product by product name, returns an array.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "searchString",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/product"
+              }
+            }
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "description": "Returns an array[] of categories available in the database.",
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "$ref": "#/definitions/category"
+              }
+            }
+          },
+          "600": {
+            "description": "Server Error."
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "description": "Logs in user.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "a@gmail.com"
+                },
+                "password": {
+                  "example": "123456"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User verified and logged in.",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "600": {
+            "description": "Server error. (Validation)."
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "OK"
+        },
+        "600": {
+          "description": ""
+        }
+      }
+    },
+    "/users/isExist": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "description": "A validation route, checks if the user's id or e-mail already exist in the data base returns a boolean true if the user exist, false if it isn't.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "example": "123456789"
+                },
+                "email": {
+                  "example": "a@gmail.com"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Validation worked properly.\n'true' means that the user's id or e-mail exist in the date base.\n 'false' means that they doesn't exist. "
+          },
+          "600": {
+            "description": "Server error."
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Register a new user account",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "email@email.com"
+                },
+                "id": {
+                  "example": "023456782"
+                },
+                "password": {
+                  "example": "password123"
+                },
+                "firstName": {
+                  "example": "John"
+                },
+                "lastName": {
+                  "example": "Doe"
+                },
+                "city": {
+                  "example": "Tel-Aviv-Yafo"
+                },
+                "street": {
+                  "example": "Bograshov"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Created"
+          },
+          "600": {
+            "description": "Bad Request. Missing one of more of the values *or* trying to bypass distinct values restriction"
+          }
+        }
+      }
+    }
+  }
+}
