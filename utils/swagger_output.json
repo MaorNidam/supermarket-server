@@ -40,28 +40,91 @@
     "http"
   ],
   "paths": {
+    "/carts/": {
+      "get": {
+        "tags": [
+          "carts"
+        ],
+        "summary": "Get last cart for the current user.",
+        "description": "Returns the last cart that the user used.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Cart"
+            }
+          },
+          "600": {
+            "description": "Server Error."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "carts"
+        ],
+        "summary": "Opens a new cart.",
+        "description": "Opens a new cart for the current user.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Cart"
+            }
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/cart-items/{cartId}": {
       "get": {
         "tags": [
           "cart-items"
         ],
-        "description": "Get all the items in the cart, by cart Id.",
+        "summary": "Get current cart items.",
+        "description": "Get all the items in the cart, by cart Id.\n Returns an array with cart-items.",
         "parameters": [
           {
             "name": "cartId",
             "in": "path",
             "required": true,
-            "type": "integer"
+            "type": "integer",
+            "example": 34
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "required": true,
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Cart-item to client"
+              }
+            }
           },
           "600": {
             "description": "Server error. (Validation)."
@@ -71,36 +134,65 @@
     },
     "/cart-items/": {
       "post": {
-        "tags" :["cart-items"],
-        "description": "Add cart item. ",
+        "tags": [
+          "cart-items"
+        ],
+        "summary": "Add cart Item",
+        "description": "Adds cart item to the current user's cart. ",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
-              "properties": {
-                "productId" : {
-                  "example" : 5
-                }, 
-                "cartId" : {
-                  "example" : 4
-                },
-                "quantity" : {
-                  "example" : 8
-                }
-              }
+              "$ref": "#/definitions/Cart-item to add"
             }
           }
         ],
         "responses": {
           "200": {
             "description": "Items added successfully."
+          },
+          "600": {
+            "description": "Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "cart-items"
+        ],
+        "summary": "Update cart Item",
+        "description": "Updates cart item to the current user's cart. ",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Cart-item to update"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item updated successfully."
           },
           "600": {
             "description": "Server Error"
@@ -113,7 +205,8 @@
         "tags": [
           "cart-items"
         ],
-        "description": "Delete the cart item.",
+        "summary": "Delete cart item.",
+        "description": "Deletes the cart item from the current user's cart.",
         "parameters": [
           {
             "name": "cartItemId",
@@ -124,7 +217,9 @@
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           }
         ],
         "responses": {
@@ -142,6 +237,7 @@
         "tags": [
           "cart-items"
         ],
+        "summary": "Delete all cart item from cart.",
         "description": "Deletes all the items that are related to the current cart.",
         "parameters": [
           {
@@ -153,7 +249,9 @@
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           }
         ],
         "responses": {
@@ -166,16 +264,86 @@
         }
       }
     },
+    "/orders/": {
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Get last order date.",
+        "description": "Get the date for the last order that the current user have purchased.\n the current user id comes from the token.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "orderDate": {
+                  "type": "string",
+                  "example": "2024-05-30T21:00:00.000Z"
+                }
+              }
+            }
+          },
+          "600": {
+            "description": "Server Error."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Adds a new order.",
+        "description": "When the user pay for the cart, this API adds a new order, close the cart, and create a receipt.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok."
+          },
+          "600": {
+            "description": "Server Error."
+          }
+        }
+      }
+    },
     "/orders/amount/": {
       "get": {
         "tags": [
           "orders"
         ],
+        "summary": "Get the amount of orders.",
         "description": "Get the amount of orders that were already made.",
-        "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "schema": {
+              "type": "integer",
+              "example": 26
+            }
           },
           "600": {
             "description": "Server Error."
@@ -188,12 +356,15 @@
         "tags": [
           "orders"
         ],
+        "summary": "Get busy days dates.",
         "description": "Get the dates of the busy days.\n A busy day means that there are 3 orders to ship on that day.\n Returns a Date array.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           }
         ],
         "responses": {
@@ -202,9 +373,43 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string"
+                "type": "string",
+                "example": "2022-07-04T16:42:55.000Z"
               }
             }
+          },
+          "600": {
+            "description": "Server Error."
+          }
+        }
+      }
+    },
+    "/orders/{cartId}": {
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Get receipt.",
+        "description": "Get the receipt for the cart requested at the path. \nReturns a text file to download.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
+          },
+          {
+            "name": "cartId",
+            "type": "integer",
+            "in": "path",
+            "required": true,
+            "example": "34"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok, receipt file sent."
           },
           "600": {
             "description": "Server Error."
@@ -224,7 +429,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/product"
+                "$ref": "#/definitions/Product"
               }
             }
           },
@@ -243,18 +448,16 @@
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           },
           {
             "name": "body",
             "in": "body",
             "schema": {
               "type": "object",
-              "properties": {
-                "payload": {
-                  "$ref": "#/definitions/productUpdate"
-                }
-              }
+              "$ref": "#/definitions/Product to update"
             }
           }
         ],
@@ -280,18 +483,17 @@
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           },
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
-              "properties": {
-                "payload": {
-                  "$ref": "#/definitions/ProductAdd"
-                }
-              }
+              "$ref": "#/definitions/Product to add"
             }
           }
         ],
@@ -319,13 +521,16 @@
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           },
           {
             "name": "categoryId",
             "in": "path",
             "required": true,
-            "type": "number"
+            "type": "number",
+            "example": 1
           }
         ],
         "responses": {
@@ -333,7 +538,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/product"
+                "$ref": "#/definitions/Product"
               }
             }
           },
@@ -349,18 +554,21 @@
           "products"
         ],
         "summary": "Search for products.",
-        "description": "Search for a product by product name, returns an array.",
+        "description": "Search for a product by product name (case insensitive), returns an array.",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "type": "string",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTM0MTh9.n8eNTkM_bM7L-OqJB8o4K3eReB8e9I9w7SE9K1NM4sg"
           },
           {
             "name": "searchString",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "example": "milk"
           }
         ],
         "responses": {
@@ -368,7 +576,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/product"
+                "$ref": "#/definitions/Product"
               }
             }
           },
@@ -390,7 +598,7 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "$ref": "#/definitions/category"
+                "$ref": "#/definitions/Category"
               }
             }
           },
@@ -405,6 +613,7 @@
         "tags": [
           "users"
         ],
+        "summary": "Log in user",
         "description": "Logs in user.",
         "parameters": [
           {
@@ -427,7 +636,7 @@
           "200": {
             "description": "User verified and logged in.",
             "schema": {
-              "$ref": "#/definitions/user"
+              "$ref": "#/definitions/User"
             }
           },
           "600": {
@@ -489,29 +698,7 @@
             "in": "body",
             "schema": {
               "type": "object",
-              "properties": {
-                "email": {
-                  "example": "email@email.com"
-                },
-                "id": {
-                  "example": "023456782"
-                },
-                "password": {
-                  "example": "password123"
-                },
-                "firstName": {
-                  "example": "John"
-                },
-                "lastName": {
-                  "example": "Doe"
-                },
-                "city": {
-                  "example": "Tel-Aviv-Yafo"
-                },
-                "street": {
-                  "example": "Bograshov"
-                }
-              }
+              "$ref": "#/definitions/User to register"
             }
           }
         ],
@@ -522,6 +709,312 @@
           "600": {
             "description": "Bad Request. Missing one of more of the values *or* trying to bypass distinct values restriction"
           }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Order": {
+      "type": "object",
+      "required": [
+        "cartId",
+        "finalPrice",
+        "shippingCity",
+        "shippingStreet",
+        "paymentLastDigits",
+        "shippingDate"
+      ],
+      "properties": {
+        "cartId": {
+          "type": "integer",
+          "example": 3
+        },
+        "finalPrice": {
+          "type": "integer",
+          "example": 444
+        },
+        "shippingCity": {
+          "type": "integer",
+          "example": "Tel-Aviv"
+        },
+        "shippingStreet": {
+          "type": "string",
+          "example": "Ha'Masger"
+        },
+        "paymentLastDigits": {
+          "type": "integer",
+          "example": 6646
+        },
+        "shippingDate": {
+          "type": "string",
+          "example": "2023-05-26 16:31:22"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "token": {
+          "type": "string",
+          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjk4NzY1NDMyMSwicm9sZSI6InVzZXIiLCJpYXQiOjE2NTc3OTY3NjN9.adP657ZmlFzSQUW_cqpiFP_6YaL4m5kZUboATP-VViY"
+        },
+        "firstName": {
+          "type": "string",
+          "example": "Avi"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Cohen"
+        },
+        "city": {
+          "type": "string",
+          "example": "Tel Aviv-Yafo"
+        },
+        "street": {
+          "type": "string",
+          "example": "Bograshov"
+        },
+        "userCart": {
+          "$ref": "#/definitions/cart"
+        }
+      }
+    },
+    "User to register": {
+      "type": "object",
+      "required": [
+        "email",
+        "id",
+        "password",
+        "firstName",
+        "lastName",
+        "city",
+        "street"
+      ],
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "email@email.com"
+        },
+        "id": {
+          "type": "string",
+          "example": "023456782"
+        },
+        "password": {
+          "type": "string",
+          "example": "password123"
+        },
+        "firstName": {
+          "type": "string",
+          "example": "John"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Doe"
+        },
+        "city": {
+          "type": "string",
+          "example": "Tel-Aviv-Yafo"
+        },
+        "street": {
+          "type": "string",
+          "example": "Bograshov"
+        }
+      }
+    },
+    "Cart": {
+      "type": "object",
+      "properties": {
+        "cartId": {
+          "type": "integer",
+          "example": "36"
+        },
+        "creationDate": {
+          "type": "string",
+          "example": "2022-07-04T16:42:55.000Z"
+        },
+        "isOpen": {
+          "type": "boolean",
+          "example": true
+        }
+      }
+    },
+    "Cart-item to client": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 3
+        },
+        "productId": {
+          "type": "integer",
+          "example": 28
+        },
+        "quantity": {
+          "type": "integer",
+          "example": 4
+        },
+        "productName": {
+          "type": "string",
+          "example": "Baguette"
+        },
+        "price": {
+          "type": "number",
+          "example": 7.50
+        },
+        "productImg": {
+          "type": "string",
+          "example": "baguette.png"
+        }
+      }
+    },
+    "Cart-item to add": {
+      "type": "object",
+      "required": [
+        "productId",
+        "cartId",
+        "quantity"
+      ],
+      "properties": {
+        "productId": {
+          "type": "integer",
+          "example": 1
+        },
+        "cartId": {
+          "type": "integer",
+          "example": 32
+        },
+        "quantity": {
+          "type": "integer",
+          "example": 5
+        }
+      }
+    },
+    "Cart-item to update": {
+      "type": "object",
+      "required": [
+        "id",
+        "productId",
+        "cartId",
+        "quantity"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 13
+        },
+        "productId": {
+          "type": "integer",
+          "example": 1
+        },
+        "cartId": {
+          "type": "integer",
+          "example": 32
+        },
+        "quantity": {
+          "type": "integer",
+          "example": 5
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "Milk"
+        },
+        "price": {
+          "type": "number",
+          "example": 6.9
+        },
+        "imgUrl": {
+          "type": "string",
+          "example": "milk.jpg"
+        },
+        "categoryId": {
+          "type": "number",
+          "example": 2
+        },
+        "categoryName": {
+          "type": "string",
+          "example": "Dairy"
+        }
+      }
+    },
+    "Product to update": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "price",
+        "imgUrl",
+        "categoryId"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 3
+        },
+        "name": {
+          "type": "string",
+          "example": "Cola"
+        },
+        "price": {
+          "type": "number",
+          "example": 16.99
+        },
+        "imgUrl": {
+          "type": "string",
+          "example": "cola.png"
+        },
+        "categoryId": {
+          "type": "integer",
+          "example": 4
+        }
+      }
+    },
+    "Product to add": {
+      "type": "object",
+      "required": [
+        "name",
+        "price",
+        "imgUrl",
+        "categoryId"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Cola"
+        },
+        "price": {
+          "type": "number",
+          "example": 16.99
+        },
+        "imgUrl": {
+          "type": "string",
+          "example": "cola.jpg"
+        },
+        "categoryId": {
+          "type": "integer",
+          "example": 1
+        }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "example": 1
+        },
+        "name": {
+          "type": "string",
+          "example": "Dairy"
         }
       }
     }
