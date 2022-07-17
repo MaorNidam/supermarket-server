@@ -1,7 +1,7 @@
-Receipt No. 25
-    Cream Cheese X 2
+Receipt No. 2
+    Artichoke X 2
 _______________________________________________
-    Cheder X 2
+    Bagel X 3
 _______________________________________________
-Total: 20.399999618530273
-Payment: 1111
+Total: ₪53
+Payment: 4123

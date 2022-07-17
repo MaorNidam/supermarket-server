@@ -50,7 +50,7 @@ async function createReceipt(orderRequest) {
 _______________________________________________`
     }
     receipt += `
-Total: ${orderRequest.finalPrice}
+Total: ₪${orderRequest.finalPrice}
 Payment: ${orderRequest.paymentLastDigits}`
 
     await fs.writeFile('./receipts/' + cartId + '.txt', receipt);

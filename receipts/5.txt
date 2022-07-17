@@ -1,7 +1,7 @@
-Receipt No. 29
-    Milk X 2
+Receipt No. 5
+    Gilt Head Bream X 1
 _______________________________________________
-    Artichoke X 3
+    Fresh Salmon X 1
 _______________________________________________
-Total: 28.500000476837158
-Payment: 1111
+Total: ₪122
+Payment: 4123

@@ -776,7 +776,7 @@
           "example": "Bograshov"
         },
         "userCart": {
-          "$ref": "#/definitions/cart"
+          "$ref": "#/definitions/Cart"
         }
       }
     },

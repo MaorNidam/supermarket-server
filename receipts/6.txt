@@ -1,9 +1,9 @@
-Receipt No. 37
-    Baguette X 1
+Receipt No. 6
+    Stake T-bone X 2
 _______________________________________________
-    Beer X 1
+    Lamb Chops X 1
 _______________________________________________
-    Cola X 5
+    Chicken Breast X 2
 _______________________________________________
-Total: 97.59999990463257
-Payment: 1111
+Total: ₪274
+Payment: 4123
