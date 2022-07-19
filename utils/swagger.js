@@ -12,3 +12,4 @@ const outputFile = './swagger_output.json';
 	await swaggerAutogen(outputFile, endpointFilesArray);
 	require('../app');
 })();
+

@@ -613,8 +613,8 @@
         "tags": [
           "users"
         ],
-        "summary": "Log in user",
-        "description": "Logs in user.",
+        "summary": "Log in to user's account.",
+        "description": "Log in to user's account.",
         "parameters": [
           {
             "name": "body",

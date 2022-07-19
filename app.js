@@ -12,10 +12,11 @@ const cartItemsController = require('./controllers/cart-items-controller');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./utils/swagger_output.json');
 const loginFilter = require('./middleware/login-filter');
+const { response } = require('express');
 // The following line register middleware functions (server.use())
 
 server.use(cors({ origin: ["http://localhost:4200" ]}));
-// server.use(loginFilter());
+server.use(loginFilter()); 
 
 // Extract the JSON from the body and create request.body object containing it:
 server.use(express.json());
