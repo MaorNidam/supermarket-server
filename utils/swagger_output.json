@@ -734,7 +734,7 @@
           "example": 444
         },
         "shippingCity": {
-          "type": "integer",
+          "type": "string",
           "example": "Tel-Aviv"
         },
         "shippingStreet": {

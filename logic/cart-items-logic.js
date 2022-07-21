@@ -1,9 +1,15 @@
 const cartItemsDal = require('../dal/cart-items-dal');
 const cartsLogic = require('./carts-logic');
 
-async function getCartItems(cartId) {
-    let cart = await cartItemsDal.getCartItems(cartId);
-    return cart;
+async function getCartItems(cartId, userId) {
+    let isCartVerified = await cartsLogic.validateCartForUser(cartId, userId);
+    if (isCartVerified) {
+        let cartItems = await cartItemsDal.getCartItems(cartId);
+        return cartItems;
+    }
+    else {
+        throw new Error("Invalid cart items request.")
+    }
 }
 
 async function addCartItem(cartItem, userInfo) {
@@ -29,11 +35,10 @@ async function updateCartItem(cartItem, userInfo) {
     }
 }
 
-async function deleteCartItem(cartItemId, userInfo) {
-    let userId = userInfo.userId;
+async function deleteCartItem(cartItemId, userId) {
     let isCartItemVerified = await validateCartItemForUser(cartItemId, userId);
     if (isCartItemVerified) {
-        await cartItemsDal.deleteCartItem(cartItemId,userId);
+        await cartItemsDal.deleteCartItem(cartItemId);
     }
     else {
         throw new Error("Invalid delete request.")

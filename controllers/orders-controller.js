@@ -8,6 +8,7 @@ const ordersLogic = require('../logic/orders-logic');
 // Method: GET
 // url: /orders/
 //getLastOrderDate()
+// Get the user's last purchase, by userId (from token).
 router.get("/", async (request, response) => {
     try {
         let userInfo = tokenDecoder.decodeTokenFromRequest(request)
@@ -25,10 +26,11 @@ router.get("/", async (request, response) => {
 // Method: GET
 // url: /orders/amount
 //getOrdersAmount()
+// get the amount of orders done.
 router.get("/amount/", async (request, response) => {
     try {
         let amountOfOrders = await ordersLogic.getOrdersAmount();
-        
+
         response.json(amountOfOrders);
     }
     catch (e) {
@@ -40,10 +42,11 @@ router.get("/amount/", async (request, response) => {
 // Method: GET
 // url: /orders/days
 //getBusyDays()
+// get the days that already have 3 orders.
 router.get("/days", async (request, response) => {
     try {
         let busyDays = await ordersLogic.getBusyDays();
-        
+
         response.json(busyDays);
     }
     catch (e) {
@@ -55,13 +58,14 @@ router.get("/days", async (request, response) => {
 // Method: GET
 // url: /orders/:cartId
 //getReceipt()
+// get the receipt for the cart, by cartId(from query) and userId (from token)
 router.get("/:cartId", async (request, response) => {
     try {
         let cartId = request.params.cartId;
         let userId = tokenDecoder.decodeTokenFromRequest(request).userId;
         let receiptName = await ordersLogic.getReceipt(cartId, userId);
 
-        response.sendFile(path.resolve(__dirname , '../receipts/' , receiptName));
+        response.sendFile(path.resolve(__dirname, '../receipts/', receiptName));
     }
     catch (e) {
         console.error(e);
@@ -71,13 +75,13 @@ router.get("/:cartId", async (request, response) => {
 
 // ADD ORDER
 // POST http://localhost:3000/orders
-// router.post("/", async (request, response, next) => {
-    router.post("/", async (request, response) => {
-        try {
-            let orderInfo = request.body;
-            
-            let userInfo = tokenDecoder.decodeTokenFromRequest(request);
-            
+// Add new order when user "payed"
+router.post("/", async (request, response) => {
+    try {
+        let orderInfo = request.body;
+
+        let userInfo = tokenDecoder.decodeTokenFromRequest(request);
+
         let orderRequest = {
             userId: userInfo.userId,
             cartId: orderInfo.cartId,

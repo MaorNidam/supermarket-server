@@ -12,7 +12,6 @@ const cartItemsController = require('./controllers/cart-items-controller');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./utils/swagger_output.json');
 const loginFilter = require('./middleware/login-filter');
-const { response } = require('express');
 // The following line register middleware functions (server.use())
 
 server.use(cors({ origin: ["http://localhost:4200" ]}));

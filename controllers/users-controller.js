@@ -6,14 +6,15 @@ const usersLogic = require('../logic/users-logic');
 // ADD USER
 // POST http://localhost:3000/users/
 // router.post("/users/", async (request, response, next) => {
+// Register new user.
 router.post("/", async (request, response) => {
     try {
         let userDetails = request.body;
         await usersLogic.addUser(userDetails);
-        
+
         response.json();
     }
-    catch(e) {
+    catch (e) {
         console.error(e);
         response.status(600).send(e.message);
     }
@@ -22,14 +23,15 @@ router.post("/", async (request, response) => {
 // login USER
 // POST http://localhost:3000/users/login
 // router.post("/users/login/", async (request, response, next) => {
+// Log in a user
 router.post("/login", async (request, response) => {
     try {
         let userLogIn = request.body;
         let loginResponse = await usersLogic.loginUser(userLogIn);
-        
+
         response.json(loginResponse);
     }
-    catch(e) {
+    catch (e) {
         console.error(e);
         response.status(600).send(e.message);
     }
@@ -38,15 +40,16 @@ router.post("/login", async (request, response) => {
 // verify USER
 // POST http://localhost:3000/users/isExist
 // router.post("/users/login/", async (request, response, next) => {
+// Validation route that verifies if the e-mail or user id already exist in the data base.
 router.post("/isExist", async (request, response) => {
     try {
         let userId = request.body.userId;
         let email = request.body.email;
         let loginResponse = await usersLogic.isUserExist(userId, email);
-        
+
         response.json(loginResponse);
     }
-    catch(e) {
+    catch (e) {
         console.error(e);
         response.status(600).send(e.message);
     }

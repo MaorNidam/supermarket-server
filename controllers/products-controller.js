@@ -6,6 +6,7 @@ const productsLogic = require('../logic/products-logic');
 // Method: GET
 // url: /products/
 //getAllProducts()
+// Get all the products exist in database.
 router.get("/", async (request, response) => {
     try {
         let products = await productsLogic.getAllProducts();
@@ -19,7 +20,8 @@ router.get("/", async (request, response) => {
 
 // Method: GET
 // url: /products/search/:searchString
-//getAllProducts()
+//searchProduct()
+//Search for a product by searchString (from query)
 router.get("/search/:searchString", async (request, response) => {
     try {
         let products = await productsLogic.searchProduct(request.params.searchString);
@@ -34,6 +36,7 @@ router.get("/search/:searchString", async (request, response) => {
 // Method: GET
 // url: /products/:category
 //getAllProductsFromCategory()
+//Get all products from specific category by categoryId (from query)
 router.get("/:categoryId", async (request, response) => {
     try {
         let products = await productsLogic.getAllProductsFromCategory(request.params.categoryId);
@@ -48,6 +51,7 @@ router.get("/:categoryId", async (request, response) => {
 
 // ADD product
 // POST http://localhost:3000/product
+// Add new product to the database.
 router.post("/", async (request, response) => {
     try {
         let product = request.body;
@@ -63,6 +67,7 @@ router.post("/", async (request, response) => {
 
 // EDIT product
 // PUT http://localhost:3000/products
+// edit existing product by productId (from body)
 router.put("/", async (request, response) => {
     try {
         let product = request.body;

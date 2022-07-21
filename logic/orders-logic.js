@@ -42,8 +42,10 @@ async function addOrder(orderRequest) {
 
 async function createReceipt(orderRequest) {
     cartId = orderRequest.cartId;
-    let receipt = 'Receipt No. ' + cartId;
-    let cartItemsArray = await cartItemsLogic.getCartItems(orderRequest.cartId);
+    userId = orderRequest.userId;
+    let receipt = 'Receipt No. ' + cartId + `
+    `;
+    let cartItemsArray = await cartItemsLogic.getCartItems(cartId, userId);
     for (let cartItem of cartItemsArray) {
         receipt += `
     ${cartItem.productName} X ${cartItem.quantity}
@@ -59,6 +61,7 @@ Payment: ${orderRequest.paymentLastDigits}`
 
 async function validateOrderRequest(orderRequest) {
     let isCartBelongToUser = await cartsLogic.validateCartForUser(orderRequest.cartId, orderRequest.userId);
+    let currentDay = new Date().toISOString().slice(0,10); // get todays date without hours. allowing user's to ask for and order today.
     if (!isCartBelongToUser) {
         throw new Error("Invalid order request.");
     }
@@ -75,7 +78,7 @@ async function validateOrderRequest(orderRequest) {
         throw new Error("Shipping street is limited to 100 characters.");
     }
 
-    if (orderRequest.shippingDate < orderRequest.orderDate) {
+    if (orderRequest.shippingDate < currentDay) {
         throw new Error("Invalid shipping date.");
     }
 
