@@ -2,7 +2,7 @@ const connection = require("./connection-wrapper");
 
 async function getLastOrderDate(userId) {
     let sql = `SELECT max(order_date) as orderDate
-    FROM supermarket.orders
+    FROM orders
     where user_id = ? `;
     let parameters = [userId]
     let [serverResponse] = await connection.executeWithParameters(sql, parameters);
@@ -11,14 +11,14 @@ async function getLastOrderDate(userId) {
 
 async function getOrdersAmount() {
     let sql = `SELECT count(id) as amountOfOrders 
-    FROM supermarket.orders`;
+    FROM orders`;
     let [serverResponse] = await connection.execute(sql);
     return serverResponse.amountOfOrders;
 }
 
 async function getBusyDays() {
     let sql = `SELECT shipping_date as busyDay  
-    FROM supermarket.orders 
+    FROM orders 
     GROUP BY shipping_date HAVING count(id) >= 3;`;
     let serverResponse = await connection.execute(sql);
     return serverResponse;

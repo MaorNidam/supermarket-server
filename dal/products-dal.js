@@ -2,7 +2,7 @@ let connection =require("./connection-wrapper");
 
 async function getAllProducts() {
     let sql = `SELECT p.id, p.name, p.price, p.img_url as imgUrl, p.category_id as categoryId, c.name as categoryName 
-    FROM supermarket.products p join supermarket.categories c 
+    FROM products p join categories c 
     on p.category_id = c.id
     order by p.name;`;
     let products = await connection.execute(sql);
@@ -11,7 +11,7 @@ async function getAllProducts() {
 
 async function getAllProductsFromCategory(categoryId) {
     let sql = `SELECT p.id, p.name, p.price, p.img_url as imgUrl, p.category_id as categoryId, c.name as categoryName 
-    FROM supermarket.products p join supermarket.categories c 
+    FROM products p join categories c 
     on p.category_id = c.id 
     where c.id = ?
     order by p.name`;
@@ -22,7 +22,7 @@ async function getAllProductsFromCategory(categoryId) {
 
 async function searchProduct(searchString) {
     let sql = `SELECT p.id, p.name, p.price, p.img_url as imgUrl, p.category_id as categoryId, c.name as categoryName 
-    FROM supermarket.products p join supermarket.categories c 
+    FROM products p join categories c 
     on p.category_id = c.id 
     where p.name like "%${searchString}%"`;
     let products = await connection.execute(sql);

@@ -2,7 +2,7 @@ const connection = require('./connection-wrapper');
 
 async function getCartItems(cartId) {
     let sql = `SELECT ci.id, ci.product_id as productId, ci.quantity, p.name as productName, p.price, p.img_url as productImg 
-    FROM supermarket.cart_items ci join products p
+    FROM cart_items ci join products p
     on ci.product_id = p.id 
     where ci.cart_id = ?; `;
     let parameters = [cartId]
